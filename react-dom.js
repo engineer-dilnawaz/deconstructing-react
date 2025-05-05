@@ -17,7 +17,15 @@ export function render(reactElement, rootElement) {
 
     if (props) {
       Object.entries(props).forEach(([key, value]) => {
-        if (key !== "children") DOMElement[key] = value;
+        if (key !== "children") {
+          if (key === "style") {
+            Object.entries(value).forEach(([style, value]) => {
+              DOMElement.style[style] = value;
+            });
+          } else {
+            DOMElement[key] = value;
+          }
+        }
       });
 
       props?.children?.forEach((child) => {
@@ -36,6 +44,7 @@ export function render(reactElement, rootElement) {
   }
 
   const DOMElement = createDOMElement(reactElement);
+  rootElement.innerHTML = "";
   if (Array.isArray(DOMElement)) {
     rootElement.append(...DOMElement);
   } else {
